@@ -55,8 +55,11 @@ class ErrorTests {
     @Test
     fun testWrongEnumChoice() {
         val argParser = ArgParser("testParser")
-        val sources by argParser.option(ArgType.EnumChoice<DataSourceEnum>(),
-                "sources", "s", "Data sources").multiple().default(listOf(DataSourceEnum.PRODUCTION))
+        val sources: DataSourceEnum? by argParser.option(
+            ArgType.EnumChoice(),
+            "sources", "s",
+            "Data sources"
+        )
         val exception = assertFailsWith<IllegalStateException> {
             argParser.parse(arrayOf("-s", "debug"))
         }
