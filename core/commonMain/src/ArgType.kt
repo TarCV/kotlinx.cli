@@ -5,6 +5,8 @@
 
 package kotlinx.cli
 
+import kotlin.reflect.KClass
+
 /**
  * Possible types of arguments.
  *
@@ -90,6 +92,19 @@ abstract class ArgType<T : Any>(val hasParameter: kotlin.Boolean) {
         {
             return EnumArgChoiceImpl(enumValues())
         }
+
+        inline fun <reified T: Any> test(): TestArgType<T> {
+            return TestArgType(T::class)
+        }
+    }
+
+    class TestArgType<T: Any>(private val kClass: KClass<T>) : ArgType<T>(true) {
+        override val description: kotlin.String = "description"
+
+        override fun convert(value: kotlin.String, name: kotlin.String): T {
+            return Any() as T // will fail at runtime
+        }
+
     }
 
     class EnumArgChoiceImpl<T: Enum<T>>(choices: Array<T>): ArgType<T>(true)
